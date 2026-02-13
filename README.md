@@ -19,7 +19,7 @@ A lightweight Python utility for monitoring CPU temperature in real-time with da
 # Troubleshooting (Error Handling)
 If you see incorrect data or errors, it might be due to a different thermal zone index on your hardware.
 1. Open `main.py`.
-2. Locate the `temperature()` function (around line 10).
+2. Locate the `temperature()` function (around line 14).
 3. Change `/thermal_zone1/` to `/thermal_zone0/` or check your `/sys/class/thermal/` directory to find the correct path.
 
 # Screenshot
