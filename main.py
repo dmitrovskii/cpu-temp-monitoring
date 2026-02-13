@@ -7,24 +7,44 @@ from collections import deque
 ROOT = pathlib.Path(__file__).resolve().parent
 
 def temperature() -> float:
+    """
+    Reads the current CPU temperature from the Linux thermal sysfs.
+    Returns: float: Temperature in degrees Celsius.
+    """
     with open("/sys/class/thermal/thermal_zone1/temp", "r") as f:
         return int(f.read()) / 1000
 
 def clear(value: int) -> None:
+    """
+    Clears the last N lines in the terminal window.
+    Args: value (int): Number of lines to delete.
+    """
     for _ in range(value): 
         sys.stdout.write('\x1b[1A\x1b[2K')
     sys.stdout.flush()
 
 def logs(info: list) -> None:
+    """
+    Saves the collected data to the logs.txt file.
+    Args: info (list): List of temperature strings to save.
+    """
     with open(ROOT / 'logs.txt', 'a') as f:
         f.writelines(info)
 
 windows = deque(maxlen=60)
 def moving_avg(data: float) -> float:
+    """
+    Calculates the average temperature for the last 60 seconds.
+    Args: data (float): The new temperature value.
+    """
     windows.append(data)
     return sum(windows) / len(windows)
 
 def main():
+    """
+    The main loop of the program. 
+    It reads the temperature, calculates stats, and saves logs.
+    """
     first_read = temperature()
     maximum = minimum = first_read
     logs_list = []
@@ -33,9 +53,9 @@ def main():
     try:
         while True:
             result = temperature()
-            if result > maximum: # max temp of cpu
+            if result > maximum: 
                 maximum = result
-            if result < minimum: # min temp of cpu
+            if result < minimum: 
                 minimum = result            
             avg = moving_avg(result)
 
